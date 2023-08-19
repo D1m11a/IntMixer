@@ -1,22 +1,27 @@
-package IntMixer;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class IntMixer {
     public static <T> Stream<T> zip(Stream<T> first, Stream<T> second) {
-        return Stream.concat(
-                first.limit(Math.min(first.count(), second.count())),
-                second.limit(Math.min(first.count(), second.count()))
-        );
+        List<T> firstList = first.toList();
+        List<T> secondList = second.toList();
+        
+        List<T> mixedList = new ArrayList<>();
+        int maxLength = Math.max(firstList.size(), secondList.size());
+        
+        for (int i = 0; i < maxLength; i++) {
+            if (i < firstList.size()) {
+                mixedList.add(firstList.get(i));
+            }
+            if (i < secondList.size()) {
+                mixedList.add(secondList.get(i));
+            }
+        }
+        
+        Collections.shuffle(mixedList);
+        
+        return mixedList.stream();
     }
-
-    public static void main(String[] args) {
-        Stream<Integer> stream1 = Stream.of(1, 2, 3, 4, 5);
-        Stream<Integer> stream2 = Stream.of(10, 20, 30);
-
-        Stream<Integer> zippedStream = zip(stream1, stream2);
-
-        zippedStream.forEach(System.out::println);
-    }
-}
 
